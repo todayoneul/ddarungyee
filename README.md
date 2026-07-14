@@ -130,9 +130,9 @@ $$\ln\left(\frac{p}{1-p}\right) = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \dots + 
 
 #### LDA (선형판별분석) vs QDA (이차판별분석)
 * **LDA:** 모든 범주가 공통의 공분산 행렬 $\Sigma$를 공유한다고 가정하므로 범주 간 결정 경계가 선형 형태를 띱니다. 범주 $k$에 대한 판별 함수 $\delta_k(x)$는 다음과 같습니다.
-  $$\delta_k(x) = x^T \Sigma^{-1} \mu_k - \frac{1}{2} \mu_k^T \Sigma^{-1} \mu_k + \ln \pi_k$$
+  $$\delta_k(x) = x^{T} \Sigma^{-1} \mu_k - \frac{1}{2} \mu_{k}^{T} \Sigma^{-1} \mu_k + \ln \pi_k$$
 * **QDA:** 각 범주가 고유한 공분산 행렬 $\Sigma_k$를 갖는다고 가정하여 판별 경계가 이차(Quadratic) 곡선 형태를 가집니다.
-  $$\delta_k(x) = -\frac{1}{2} \ln |\Sigma_k| - \frac{1}{2}(x - \mu_k)^T \Sigma_k^{-1}(x - \mu_k) + \ln \pi_k$$
+  $$\delta_k(x) = -\frac{1}{2} \ln |\Sigma_k| - \frac{1}{2}(x - \mu_{k})^{T} \Sigma_{k}^{-1}(x - \mu_k) + \ln \pi_k$$
 
 #### KNN (K-최근접 이웃)
 새로운 관측치 $x_0$ 주변의 가장 가까운 이웃 데이터 포인트들의 모임인 $\mathcal{N}_0$을 탐색하고, 다수결 방식으로 범주 확률을 부여하는 대표적 비모수 모델입니다.
@@ -153,9 +153,9 @@ $$P(Y = j \mid X = x_0) = \frac{1}{K} \sum_{i \in \mathcal{N}_0} I(y_i = j)$$
 
 봄철 전체 기간 중 단 6일만 존재하는 법정공휴일(`is_holiday`)과 같이 표본 불균형이 강한 독립변수의 회귀 계수에 대해 점근적 정규 분포 가정이 무너지는 문제를 대처하기 위해 Pairs Bootstrap을 구현했습니다.
 
-데이터 포인트 $(X_i, Y_i)$ 자체를 행 단위로 복원추출하여 가상 표본 $B$개를 구축합니다. 개별 가상 데이터셋을 통해 추정된 계수를 $\hat{\beta}^*_b$라 할 때, 최종적인 부트스트랩 표준오차 $\text{SE}_{\text{boot}}(\hat{\beta})$는 다음과 같습니다.
+데이터 포인트 $(X_i, Y_i)$ 자체를 행 단위로 복원추출하여 가상 표본 $B$개를 구축합니다. 개별 가상 데이터셋을 통해 추정된 계수를 $\hat{\beta}^{*}_{b}$라 할 때, 최종적인 부트스트랩 표준오차 $\text{SE}_{\text{boot}}(\hat{\beta})$는 다음과 같습니다.
 
-$$\text{SE}_{\text{boot}}(\hat{\beta}) = \sqrt{\frac{1}{B-1} \sum_{b=1}^B (\hat{\beta}^*_b - \bar{\beta}^*)^2}$$
+$$\text{SE}_{\text{boot}}(\hat{\beta}) = \sqrt{\frac{1}{B-1} \sum_{b=1}^B (\hat{\beta}^{*}_{b} - \bar{\beta}^{*})^2}$$
 
 이를 통해 OLS가 과소평가하던 통계적 변동 오차 한계를 실증적으로 보정하였습니다.
 
@@ -166,7 +166,7 @@ $$\text{SE}_{\text{boot}}(\hat{\beta}) = \sqrt{\frac{1}{B-1} \sum_{b=1}^B (\hat{
 #### Lasso (L1 Regularization) 회귀
 오차 제곱합에 가중치 절대값의 합(L1 패널티)을 제약식으로 가해 모델의 예측에 불필요한 계수를 완전히 0으로 축소시킵니다.
 
-$$\min_{\beta} \sum_{i=1}^n \left( y_i - \beta_0 - \sum_{j=1}^p \beta_j x_{ij} \right)^2 + \lambda \sum_{j=1}^p |\beta_j|$$
+$$\min_{\beta} \sum_{i=1}^n \left( y_i - \beta_0 - \sum_{j=1}^p \beta_j x_{ij} \right)^{2} + \lambda \sum_{j=1}^p |\beta_j|$$
 
 규제 변수 $\lambda$가 강해짐에 따라 변수 계수들이 0으로 도달하는 수축 경향은 아래와 같습니다.
 
@@ -175,14 +175,14 @@ $$\min_{\beta} \sum_{i=1}^n \left( y_i - \beta_0 - \sum_{j=1}^p \beta_j x_{ij} \
 #### Ridge (L2 Regularization) 회귀
 오차 제곱합에 가중치 제곱합(L2 패널티)을 제약식으로 가해 계수를 전체적으로 부드럽게 감소시킵니다. 다중공선성이 존재하는 고상관 예측변수들의 추정 분산을 효과적으로 억제합니다.
 
-$$\min_{\beta} \sum_{i=1}^n \left( y_i - \beta_0 - \sum_{j=1}^p \beta_j x_{ij} \right)^2 + \lambda \sum_{j=1}^p \beta_j^2$$
+$$\min_{\beta} \sum_{i=1}^n \left( y_i - \beta_0 - \sum_{j=1}^p \beta_j x_{ij} \right)^{2} + \lambda \sum_{j=1}^p \beta_j^2$$
 
 ![Ridge Penalty 수축 경로](images/ridge_path.png)
 
 #### PCR (주성분 회귀) vs PLS (부분최소제곱)
 * **PCR:** 독립변수 행렬 $X$의 공분산만을 최대화하는 직교 벡터 주성분 $Z = XD$를 생성하고, 이를 독립변수로 선형 회귀를 적합합니다. 타겟 변수 $Y$의 관계성은 차원 유도 단계에서 철저히 무시됩니다.
 * **PLS:** 차원 축소 유도 시 타겟 $Y$와의 공분산 구조를 동시에 반영할 수 있도록 선형 결합 가중치 $w$를 직접 구합니다.
-  $$\max_{w} \text{Cov}^2(Xw, Y) = \max_{w} \text{Var}(Xw) \cdot \text{Corr}^2(Xw, Y) \quad \text{s.t.} \quad \|w\|_2^2 = 1$$
+  $$\max_{w} \text{Cov}^{2}(Xw, Y) = \max_{w} \text{Var}(Xw) \cdot \text{Corr}^{2}(Xw, Y) \quad \text{s.t.} \quad \|w\|_{2}^{2} = 1$$
 
 아래 그림은 PCR과 PLS의 컴포넌트 수에 따른 예측 오차 변화를 체계적으로 평가한 그래프입니다.
 
@@ -197,7 +197,7 @@ $$\min_{\beta} \sum_{i=1}^n \left( y_i - \beta_0 - \sum_{j=1}^p \beta_j x_{ij} \
 #### Polynomial Regression & Splines
 * **Natural Spline:** 외삽(Extrapolation) 지대의 예측 불안정성을 제어하기 위해 양 끝 경계점(Boundary Knots) 밖의 영역을 선형(Linear)으로 제한하여 적합합니다.
 * **Smoothing Spline:** 모든 데이터 포인트에서 매끄럽게 연결되는 다항식 곡선을 도출하는 방법론으로, 오차 제곱합과 곡선의 거친 정도를 나타내는 2차 미분 적분 값을 절충합니다.
-  $$\min_g \sum_{i=1}^n (y_i - g(x_i))^2 + \lambda \int (g''(t))^2 dt$$
+  $$\min_g \sum_{i=1}^n (y_i - g(x_i))^2 + \lambda \int (g''(t))^{2} dt$$
   여기서 $\lambda$는 평활도(roughness penalty)를 조정하는 매개변수로 GCV를 적용해 결정합니다.
 
 아래는 Natural Spline과 B-Spline을 적용한 예측선 비교 결과입니다.
